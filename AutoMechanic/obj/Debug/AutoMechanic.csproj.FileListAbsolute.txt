@@ -1,0 +1,16 @@
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\bin\Debug\AutoMechanic.exe.config
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\bin\Debug\AutoMechanic.exe
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\bin\Debug\AutoMechanic.pdb
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.csprojAssemblyReference.cache
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\MainWindow.g.cs
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\App.g.cs
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic_MarkupCompile.cache
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic_MarkupCompile.lref
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\MainWindow.baml
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.g.resources
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.Properties.Resources.resources
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.csproj.GenerateResource.cache
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.exe
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.pdb
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\WindowForGuest.g.cs
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\WindowForGuest.baml
