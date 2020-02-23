@@ -31,22 +31,24 @@ namespace AutoMechanic
 
         private void BuildInterface()
         {
-            Grid.Children.Add(WindowMaker.GetTextBlock("Login :", new Thickness(300, 150, 300, 220), "Login"));
-            var loginBox = WindowMaker.GetTextBox(new Thickness(300, 180, 300, 210), "LoginBox");
-            Grid.Children.Add(loginBox);
-            Grid.Children.Add(WindowMaker.GetTextBlock("Password :", new Thickness(300, 210, 300, 100), "Password"));
-            var passwordBox = WindowMaker.GetTextBox(new Thickness(300, 240, 300, 150), "PasswordBox");
-            Grid.Children.Add(passwordBox);
-            var button = new Button() { Margin = new Thickness(300, 300, 300, 50), Content = "Login" };
-            button.Click += (sender, e) => CheckAndLogin(loginBox.Text, passwordBox.Text);
-            Grid.Children.Add(button);
+            var elements = Grid.Children;
+            elements.Add(WindowMaker.GetTextBlock("Login :", new Thickness(300, 150, 300, 220)));
+            var loginBox = WindowMaker.GetTextBox(new Thickness(300, 180, 300, 210));
+            elements.Add(loginBox);
+            elements.Add(WindowMaker.GetTextBlock("Password :", new Thickness(300, 210, 300, 100)));
+            var passwordBox = WindowMaker.GetTextBox(new Thickness(300, 240, 300, 150));
+            elements.Add(passwordBox);
+            elements.Add(WindowMaker.GetButton("Login", new Thickness(300, 290, 300, 80),
+                (sender, e) => CheckAndLogin(loginBox.Text, passwordBox.Text)));
+            elements.Add(WindowMaker.GetButton("Register", new Thickness(300, 350, 300, 20),
+                (sender, e) => RegisterGuest()));
         }
 
         private void CheckAndLogin(string login, string password)
         {
             if(login == "" || password == "" || login.Contains(' ') || password.Contains(' '))
             {
-                MessageBox.Show("Wrong login and password");
+                MessageBox.Show("Wrong login or password");
                 return;
             }
             var directory = Directory.GetCurrentDirectory() + @"\Logins.txt";
@@ -60,11 +62,18 @@ namespace AutoMechanic
                 {
                     if (!int.Parse(datas[1]).Equals(password.GetHashCode()))
                         break;
-                    
+                    //TODO: логирование
                 }
             }
-            MessageBox.Show("Wrong login and password");
+            MessageBox.Show("Wrong login or password");
             return;
+        }
+
+        private void RegisterGuest()
+        {
+            var registrationWindow = new RegistrationWindow();
+            registrationWindow.Show();
+            Close();
         }
     }
 }

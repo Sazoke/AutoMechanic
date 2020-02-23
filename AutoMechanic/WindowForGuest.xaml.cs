@@ -37,12 +37,12 @@ namespace AutoMechanic
         {
             Grid.Children.Clear();
 
-            Grid.Children.Add(WindowMaker.GetTextBlock("Model of machine :", new Thickness(80, 150, 500, 200), "ModelMachine"));
-            var machineModelBox = WindowMaker.GetTextBox(new Thickness(80, 200, 500, 180), "ModelMachineBox");
+            Grid.Children.Add(WindowMaker.GetTextBlock("Model of machine :", new Thickness(80, 150, 500, 200)));
+            var machineModelBox = WindowMaker.GetTextBox(new Thickness(80, 200, 500, 180));
             Grid.Children.Add(machineModelBox);
 
-            Grid.Children.Add(WindowMaker.GetTextBlock("Number of machine :", new Thickness(320, 150, 200, 200), "NumberMachine"));
-            var machineNumberBox = WindowMaker.GetTextBox(new Thickness(320, 200, 200, 180), "NumberMachineBox");
+            Grid.Children.Add(WindowMaker.GetTextBlock("Number of machine :", new Thickness(320, 150, 200, 200)));
+            var machineNumberBox = WindowMaker.GetTextBox(new Thickness(320, 200, 200, 180));
             Grid.Children.Add(machineNumberBox);
 
             var button = new Button() { Margin = new Thickness(600, 150, 50, 150), Content = "Зарегистрировать" };

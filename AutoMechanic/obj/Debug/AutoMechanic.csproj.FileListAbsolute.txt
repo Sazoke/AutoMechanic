@@ -14,3 +14,5 @@ C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.exe
 C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.pdb
 C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\WindowForGuest.g.cs
 C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\WindowForGuest.baml
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\RegistrationWindow.g.cs
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\RegistrationWindow.baml
