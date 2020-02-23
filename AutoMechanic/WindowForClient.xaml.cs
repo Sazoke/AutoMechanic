@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace AutoMechanic
 {
-    /// <summary>
-    /// Логика взаимодействия для WindowForGuest.xaml
-    /// </summary>
     public partial class WindowForClient : Window
     {
         private Client client;
@@ -71,9 +70,29 @@ namespace AutoMechanic
                 return;
             }
 
-            //TODO отправка в базу данных
-
+            var newOrder = new Order(client, number, model);
+            AddToDatabase(newOrder);
             Grid.Children.Clear();
+            BuildInterface();
+        }
+
+        private void AddToDatabase(Order order)
+        {
+            var app = new Excel.Application();
+            var workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\Orders.xlsx");
+            var index = 0;
+            var workSheet = (Excel.Worksheet)workBook.Worksheets[1];
+            var cell = workSheet.Cells[++index, 1];
+            while (cell.Value2 != null)
+                cell = workSheet.Cells[++index, 1];
+            workSheet.Cells[index, 1].Value2 = order.Client.Name;
+            workSheet.Cells[index, 2].Value2 = order.Client.Surname;
+            workSheet.Cells[index, 3].Value2 = order.Client.PhoneNumber;
+            workSheet.Cells[index, 4].Value2 = order.ModelOfMachine;
+            workSheet.Cells[index, 5].Value2 = order.NumberOfMachine;
+            workBook.Save();
+            workBook.Close();
+            app.Quit();
         }
     }
 }
