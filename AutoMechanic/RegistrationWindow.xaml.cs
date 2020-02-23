@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,37 +20,70 @@ namespace AutoMechanic
     /// </summary>
     public partial class RegistrationWindow : Window
     {
-        private List<string> ContentOfBoxes = new List<string>();
+        private List<TextBox> boxes = new List<TextBox>();
+        private List<string> ContentOfBlocks = new List<string>() { "Login", "Password", "Name", "Surname", "Phone number" };
         public RegistrationWindow()
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             Closing += (sender, e) => { var window = new MainWindow(); window.Show(); };
-            var names = new List<string>() { "Login", "Password", "Name", "Surname", "Phone number" };
-            BuildInterface(names);
+            BuildInterface();
         }
 
-        private void BuildInterface(List<string> names)
+        private void BuildInterface()
         {
             var elements = Grid.Children;
             var thicknessOfBLock = new Thickness(100, 50, 500, 340);
             var thicknessOfBox = new Thickness(300, 50, 300, 340);
-            foreach (var name in names)
+            foreach (var name in ContentOfBlocks)
             {
                 elements.Add(WindowMaker.GetTextBlock(name, thicknessOfBLock));
                 var box = WindowMaker.GetTextBox(thicknessOfBox);
-                ContentOfBoxes.Add(box.Text);
+                boxes.Add(box);
                 elements.Add(box);
                 thicknessOfBLock = ChangeThickness(thicknessOfBLock);
                 thicknessOfBox = ChangeThickness(thicknessOfBox);
             }
             elements.Add(WindowMaker.GetButton("Register", new Thickness(550, 370, 50, 10),
-                (sender, e) => { AddUser(); Close(); }));
+                (sender, e) => CheckAndAdd()));
+        }
+
+        private void CheckAndAdd()
+        {
+            for (int i = 0; i < boxes.Count; i++)
+            {
+                var name = boxes[i].Text;
+                int x;
+                if (name.Contains(' ') || name == "" || 
+                    (i == 1 && name.Length < 4) || 
+                    (i == 4 && name.Length != 11 && int.TryParse(name,out x)))
+                {
+                    MessageBox.Show("Wrong " + ContentOfBlocks[i]);
+                    return;
+                }
+            }
+            AddUser();
+            Close();
         }
 
         private void AddUser()
         {
-            //TODO:Добавление в базу
+            var path = Directory.GetCurrentDirectory() + @"\Logins.txt";
+            
+            var txt = "";
+            for (int i = 0; i < boxes.Count; i++)
+            {
+                if(i == 1)
+                {
+                    txt += boxes[i].Text.GetHashCode();
+                    txt += " ";
+                    continue;
+                }
+                txt += boxes[i].Text + ' ';
+            }
+            txt += "client";
+            using(var streamWriter = new StreamWriter(path, true))
+                streamWriter.WriteLine(txt);
         }
 
         private Thickness ChangeThickness(Thickness thickness) =>
