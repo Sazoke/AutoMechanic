@@ -12,7 +12,9 @@ C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.Pro
 C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.csproj.GenerateResource.cache
 C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.exe
 C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\AutoMechanic.pdb
-C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\WindowForGuest.g.cs
-C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\WindowForGuest.baml
 C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\RegistrationWindow.g.cs
 C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\RegistrationWindow.baml
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\WindowForClient.g.cs
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\WindowForClient.baml
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\WindowForMechanic.g.cs
+C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\obj\Debug\WindowForMechanic.baml

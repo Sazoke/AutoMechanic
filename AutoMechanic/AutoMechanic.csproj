@@ -62,8 +62,11 @@
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="User.cs" />
-    <Compile Include="WindowForGuest.xaml.cs">
-      <DependentUpon>WindowForGuest.xaml</DependentUpon>
+    <Compile Include="WindowForClient.xaml.cs">
+      <DependentUpon>WindowForClient.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowForMechanic.xaml.cs">
+      <DependentUpon>WindowForMechanic.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowMaker.cs" />
     <Page Include="MainWindow.xaml">
@@ -82,7 +85,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WindowForGuest.xaml">
+    <Page Include="WindowForClient.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowForMechanic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

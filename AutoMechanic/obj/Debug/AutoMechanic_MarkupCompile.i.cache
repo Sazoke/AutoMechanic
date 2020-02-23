@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\solov\source\repos\AutoMechanic\AutoMechanic\App.xaml
-3167904885
+41258588428
 
-13-2089482547
+141669172244
 13-1505183044
-MainWindow.xaml;RegistrationWindow.xaml;WindowForGuest.xaml;
+MainWindow.xaml;RegistrationWindow.xaml;WindowForClient.xaml;WindowForMechanic.xaml;
 
 True
 

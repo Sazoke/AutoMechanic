@@ -61,8 +61,15 @@ namespace AutoMechanic
                 if (datas[0].Equals(login))
                 {
                     if (!int.Parse(datas[1]).Equals(password.GetHashCode()))
-                        break;
-                    //TODO: логирование
+                        continue;
+                    Window window;
+                    if (datas.Last() == "client")
+                        window = new WindowForClient(new Client(datas));
+                    else
+                        window = new WindowForMechanic();
+                    window.Show();
+                    Close();
+                    return;
                 }
             }
             MessageBox.Show("Wrong login or password");

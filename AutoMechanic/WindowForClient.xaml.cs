@@ -17,11 +17,13 @@ namespace AutoMechanic
     /// <summary>
     /// Логика взаимодействия для WindowForGuest.xaml
     /// </summary>
-    public partial class WindowForGuest : Window
+    public partial class WindowForClient : Window
     {
-        public WindowForGuest()
+        private Client client;
+        public WindowForClient(Client client)
         {
             InitializeComponent();
+            this.client = client;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             BuildInterface();
         }
@@ -35,19 +37,20 @@ namespace AutoMechanic
 
         private void BuildFormOfOrder()
         {
-            Grid.Children.Clear();
+            var elements = Grid.Children;
+            elements.Clear();
 
-            Grid.Children.Add(WindowMaker.GetTextBlock("Model of machine :", new Thickness(80, 150, 500, 200)));
+            elements.Add(WindowMaker.GetTextBlock("Model of machine :", new Thickness(80, 150, 500, 200)));
             var machineModelBox = WindowMaker.GetTextBox(new Thickness(80, 200, 500, 180));
-            Grid.Children.Add(machineModelBox);
+            elements.Add(machineModelBox);
 
-            Grid.Children.Add(WindowMaker.GetTextBlock("Number of machine :", new Thickness(320, 150, 200, 200)));
+            elements.Add(WindowMaker.GetTextBlock("Number of machine :", new Thickness(320, 150, 200, 200)));
             var machineNumberBox = WindowMaker.GetTextBox(new Thickness(320, 200, 200, 180));
-            Grid.Children.Add(machineNumberBox);
+            elements.Add(machineNumberBox);
 
             var button = new Button() { Margin = new Thickness(600, 150, 50, 150), Content = "Зарегистрировать" };
             button.Click += (sender, e) => CheckAndAddToDataBase(machineModelBox.Text, machineNumberBox.Text);
-            Grid.Children.Add(button);
+            elements.Add(button);
         }
 
         private void CheckAndAddToDataBase(string model, string number)
