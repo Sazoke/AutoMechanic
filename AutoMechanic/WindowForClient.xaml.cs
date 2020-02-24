@@ -70,7 +70,7 @@ namespace AutoMechanic
                 return;
             }
 
-            var newOrder = new Order(client, number, model);
+            var newOrder = new Order(client, model, number);
             AddToDatabase(newOrder);
             Grid.Children.Clear();
             BuildInterface();

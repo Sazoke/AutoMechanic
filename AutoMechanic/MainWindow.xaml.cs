@@ -47,7 +47,7 @@ namespace AutoMechanic
 
         private void CheckAndLogin(string login, string password)
         {
-            if(login == "" || password == "" || login.Contains(' ') || password.Contains(' '))
+            if(login == "" || password == "")
             {
                 MessageBox.Show("Wrong login or password");
                 return;
@@ -55,9 +55,11 @@ namespace AutoMechanic
             var directory = Directory.GetCurrentDirectory() + @"\Logins.txt";
             var reader = new StreamReader(directory);
             var dataOfUser = "";
-            while (dataOfUser != null)
+            while (true)
             {
                 dataOfUser = reader.ReadLine();
+                if (dataOfUser is null)
+                    break;
                 var datas = dataOfUser.Split(' ');
                 if (datas[0].Equals(login))
                 {
