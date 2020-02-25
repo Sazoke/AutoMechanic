@@ -27,7 +27,12 @@ namespace AutoMechanic
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            Width = 780;
+            BuildInterface();
+        }
+
+        private void BuildInterface()
+        {
+            Grid.Children.Clear();
             var tabControl = new TabControl();
             tabControl.Items.Add(new TabItem() { Content = GetGridOrders(), Header = "Orders" });
             tabControl.Items.Add(new TabItem() { Content = GetGridAdmin(), Header = "Add new admin" });
@@ -39,8 +44,21 @@ namespace AutoMechanic
             var result = new Grid();
             if (orders is null)
                 orders = GetOrders();
-            var datas = new DataGrid() { AutoGenerateColumns = true, ItemsSource = orders, ColumnWidth = 250 };
+            var datas = new DataGrid() { AutoGenerateColumns = true, ItemsSource = orders, ColumnWidth = 250, ColumnHeaderHeight = 30 };
             result.Children.Add(datas);
+            datas.SelectedCellsChanged += (sender, e) =>
+            {
+                var dialogResult = MessageBox.Show("Add order?", "", MessageBoxButton.YesNo);
+                if (dialogResult == MessageBoxResult.Yes)
+                {
+                    
+                }
+                else if (dialogResult == MessageBoxResult.No)
+                {
+                    RemoveOrderAt(datas.SelectedIndex);
+                    BuildInterface();
+                }
+            };
             var scroll = new ScrollViewer() { CanContentScroll = true, Visibility = Visibility.Visible };
             MouseWheel += (sender, e) => { if (e.Delta > 0) scroll.LineUp(); else scroll.LineDown(); };
             datas.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
@@ -52,6 +70,7 @@ namespace AutoMechanic
         {
             var list = new List<Order>();
             var app = new Excel.Application();
+            var excelProcess = System.Diagnostics.Process.GetProcessesByName("EXCEL").Last();
             var workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\Orders.xlsx");
             var index = 1;
             var workSheet = (Excel.Worksheet)workBook.Worksheets[1];
@@ -63,7 +82,28 @@ namespace AutoMechanic
                     (string)workSheet.Cells[index++, 5].Value2));
             workBook.Close();
             app.Quit();
+            excelProcess.Kill();
             return list;
+        }
+
+        private void RemoveOrderAt(int index)
+        {
+            orders.RemoveAt(index);
+            index++;
+            var app = new Excel.Application();
+            var excelProcess = System.Diagnostics.Process.GetProcessesByName("EXCEL").Last();
+            var workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\Orders.xlsx");
+            var workSheet = (Excel.Worksheet)workBook.Worksheets[1];
+            while (workSheet.Cells[index, 1].Value2 != null)
+            {
+                for (int i = 1; i < 6; i++)
+                    workSheet.Cells[index, i].Value2 = workSheet.Cells[index + 1, i].Value2;
+                index++;
+            }
+            workBook.Save();
+            workBook.Close();
+            app.Quit();
+            excelProcess.Kill();
         }
 
         private Grid GetGridAdmin()
