@@ -61,16 +61,16 @@ namespace AutoMechanic
             }
 
             var newOrder = new Order(client, model, number);
-            AddToDatabase(newOrder);
+            AddToDatabase(newOrder, "ConsiderationOrders.xlsx");
             Grid.Children.Clear();
             BuildInterface();
         }
 
-        private void AddToDatabase(Order order)
+        public static void AddToDatabase(Order order, string nameOfDocument)
         {
             var app = new Excel.Application();
             var excelProcess = System.Diagnostics.Process.GetProcessesByName("EXCEL").Last();
-            var workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\Orders.xlsx");
+            var workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\" + nameOfDocument);
             var index = 0;
             var workSheet = (Excel.Worksheet)workBook.Worksheets[1];
             var cell = workSheet.Cells[++index, 1];

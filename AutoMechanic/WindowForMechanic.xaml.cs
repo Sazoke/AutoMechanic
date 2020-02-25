@@ -1,28 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
 namespace AutoMechanic
 {
-    /// <summary>
-    /// Логика взаимодействия для WindowForMechanic.xaml
-    /// </summary>
     public partial class WindowForMechanic : Window
     {
-        private List<Order> orders;
+        private List<Order> ordersForConsideration;
+        private List<Order> ordersInProgress;
+        private Grid progressGid;
+        private Grid considerationGrid;
         public WindowForMechanic()
         {
             InitializeComponent();
@@ -32,46 +23,75 @@ namespace AutoMechanic
 
         private void BuildInterface()
         {
-            Grid.Children.Clear();
             var tabControl = new TabControl();
-            tabControl.Items.Add(new TabItem() { Content = GetGridOrders(), Header = "Orders" });
+            SetGridOrders(ref considerationGrid,  "ConsiderationOrders.xlsx", (sender, e) => ActionWIthConsiderationOrder((DataGrid)sender), ref ordersForConsideration);
+            SetGridOrders(ref progressGid, "OrdersInProgress.xlsx", (sender, e) => ActionWithOrderInProgress((DataGrid)sender), ref ordersInProgress);
+            tabControl.Items.Add(new TabItem()
+            {
+                Content = considerationGrid,
+                Header = "Orders for consideration"
+            });
+            tabControl.Items.Add(new TabItem()
+            {
+                Content = progressGid,
+                Header = "Orders in progress"
+            });
             tabControl.Items.Add(new TabItem() { Content = GetGridAdmin(), Header = "Add new admin" });
             Grid.Children.Add(tabControl);
         }
 
-        private Grid GetGridOrders()
+        private void ActionWithOrderInProgress(DataGrid datas)
         {
-            var result = new Grid();
-            if (orders is null)
-                orders = GetOrders();
-            var datas = new DataGrid() { AutoGenerateColumns = true, ItemsSource = orders, ColumnWidth = 250, ColumnHeaderHeight = 30 };
-            result.Children.Add(datas);
-            datas.SelectedCellsChanged += (sender, e) =>
+            if (datas.SelectedCells.Count == 0)
+                return;
+            var dialogResult = MessageBox.Show("Are you complete order?", "Compliting order", MessageBoxButton.YesNo);
+            if (dialogResult == MessageBoxResult.Yes)
             {
-                var dialogResult = MessageBox.Show("Add order?", "", MessageBoxButton.YesNo);
-                if (dialogResult == MessageBoxResult.Yes)
-                {
-                    
-                }
-                else if (dialogResult == MessageBoxResult.No)
-                {
-                    RemoveOrderAt(datas.SelectedIndex);
-                    BuildInterface();
-                }
-            };
+                MessageBox.Show("Call to : " + ordersInProgress[datas.SelectedIndex].Client);
+                RemoveOrderAt(datas.SelectedIndex, "OrdersInProgress.xlsx");
+            }
+            datas.UnselectAll();
+        }
+
+        private void ActionWIthConsiderationOrder(DataGrid datas)
+        {
+            if (datas.SelectedCells.Count == 0)
+                return;
+            var dialogResult = MessageBox.Show("Add order?", "Adding order to base", MessageBoxButton.YesNoCancel);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                if (ordersInProgress != null)
+                    ordersInProgress.Add(ordersForConsideration[datas.SelectedIndex]);
+                WindowForClient.AddToDatabase(ordersForConsideration[datas.SelectedIndex], "OrdersInProgress.xlsx");
+                SetGridOrders(ref progressGid, "OrdersInProgress.xlsx", (sender, e) => ActionWithOrderInProgress((DataGrid)sender), ref ordersInProgress);
+                RemoveOrderAt(datas.SelectedIndex, "ConsiderationOrders.xlsx");
+            }
+            else if (dialogResult == MessageBoxResult.No)
+                RemoveOrderAt(datas.SelectedIndex, "ConsiderationOrders.xlsx");
+        }
+        private void SetGridOrders(ref Grid grid,string nameOfFile, SelectedCellsChangedEventHandler selectedCellsChangedEventHandler, ref List<Order> orders)
+        {
+            if (grid is null)
+                grid = new Grid();
+            else
+                grid.Children.Clear();
+            if (orders is null)
+                orders = GetOrders(nameOfFile);
+            var datas = new DataGrid() { AutoGenerateColumns = true, ItemsSource = orders, ColumnWidth = 250, ColumnHeaderHeight = 30 };
+            grid.Children.Add(datas);
+            datas.SelectedCellsChanged += selectedCellsChangedEventHandler;
             var scroll = new ScrollViewer() { CanContentScroll = true, Visibility = Visibility.Visible };
             MouseWheel += (sender, e) => { if (e.Delta > 0) scroll.LineUp(); else scroll.LineDown(); };
             datas.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
-            scroll.Content = result;
-            return result;
+            scroll.Content = grid;
         }
 
-        private List<Order> GetOrders()
+        private List<Order> GetOrders(string nameOfFile)
         {
             var list = new List<Order>();
             var app = new Excel.Application();
             var excelProcess = System.Diagnostics.Process.GetProcessesByName("EXCEL").Last();
-            var workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\Orders.xlsx");
+            var workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\" + nameOfFile);
             var index = 1;
             var workSheet = (Excel.Worksheet)workBook.Worksheets[1];
             while (workSheet.Cells[index, 1].Value2 != null)
@@ -86,13 +106,22 @@ namespace AutoMechanic
             return list;
         }
 
-        private void RemoveOrderAt(int index)
+        private void RemoveOrderAt(int index, string nameOfFile)
         {
-            orders.RemoveAt(index);
+            if (nameOfFile == "OrdersInProgress.xlsx")
+            {
+                ordersInProgress.RemoveAt(index);
+                SetGridOrders(ref progressGid,"OrdersInProgress.xlsx", (sender, e) => ActionWithOrderInProgress((DataGrid)sender), ref ordersInProgress);
+            }
+            else
+            {
+                ordersForConsideration.RemoveAt(index);
+                SetGridOrders(ref considerationGrid, "ConsiderationOrders.xlsx", (sender, e) => ActionWIthConsiderationOrder((DataGrid)sender), ref ordersForConsideration);
+            }
             index++;
             var app = new Excel.Application();
             var excelProcess = System.Diagnostics.Process.GetProcessesByName("EXCEL").Last();
-            var workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\Orders.xlsx");
+            var workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\" + nameOfFile);
             var workSheet = (Excel.Worksheet)workBook.Worksheets[1];
             while (workSheet.Cells[index, 1].Value2 != null)
             {

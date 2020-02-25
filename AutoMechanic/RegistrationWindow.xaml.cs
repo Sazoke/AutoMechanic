@@ -41,10 +41,10 @@ namespace AutoMechanic
             for (int i = 0; i < boxes.Count; i++)
             {
                 var name = boxes[i].Text;
-                int x;
+                long x;
                 if (name.Contains(' ') || name == "" || 
                     (i == 1 && name.Length < 4) || 
-                    (i == 4 && name.Length != 11 && int.TryParse(name,out x)))
+                    (i == 4 && (name.Length != 11 || !long.TryParse(name,out x))))
                 {
                     MessageBox.Show("Wrong " + ContentOfBlocks[i]);
                     return;
