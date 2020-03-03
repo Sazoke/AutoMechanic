@@ -39,6 +39,11 @@ namespace AutoMechanic
             });
             tabControl.Items.Add(new TabItem() { Content = GetGridAdmin(), Header = "Add new admin" });
             Grid.Children.Add(tabControl);
+            tabControl.Items.Add(new TabItem()
+            {
+                Content = GetHelpGrid(),
+                Header = "Help"
+            });
         }
 
         private void ActionWithOrderInProgress(DataGrid datas)
@@ -52,6 +57,13 @@ namespace AutoMechanic
                 RemoveOrderAt(datas.SelectedIndex, "OrdersInProgress.xlsx");
             }
             datas.UnselectAll();
+        }
+
+        private Grid GetHelpGrid()
+        {
+            var result = WindowMaker.GetGrid(new Thickness(0));
+            result.Children.Add(new TextBlock() { Text = "Instructions..." });
+            return result;
         }
 
         private void ActionWIthConsiderationOrder(DataGrid datas)

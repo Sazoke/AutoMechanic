@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoMechanic"
         mc:Ignorable="d"
-        Title="WindowForMechanic" Height="450" Width="800">
+        Title="WindowForMechanic" Height="450" Width="790">
     <Grid x:Name="Grid">
         
     </Grid>
