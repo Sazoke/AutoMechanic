@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace AutoMechanic
 {
@@ -14,15 +16,19 @@ namespace AutoMechanic
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
             Closing += (sender, e) => { var window = new MainWindow(); window.Show(); };
             BuildInterface();
         }
 
         private void BuildInterface()
         {
-            var elements = Grid.Children;
-            var thicknessOfBLock = new Thickness(100, 50, 500, 340);
-            var thicknessOfBox = new Thickness(300, 50, 300, 340);
+            var Grid = WindowMaker.GetGrid("Start.jpg", new Thickness(0));
+            AddChild(Grid);
+            var kitGrid = WindowMaker.GetGrid(new SolidColorBrush(Color.FromArgb(200, 240, 248, 252)), new Thickness(200, 25, 200, 25));
+            var elements = kitGrid.Children;
+            var thicknessOfBLock = new Thickness(10, 10, 10, 300);
+            var thicknessOfBox = new Thickness(10, 40, 10, 300);
             foreach (var name in ContentOfBlocks)
             {
                 elements.Add(WindowMaker.GetTextBlock(name, thicknessOfBLock));
@@ -32,8 +38,9 @@ namespace AutoMechanic
                 thicknessOfBLock = ChangeThickness(thicknessOfBLock);
                 thicknessOfBox = ChangeThickness(thicknessOfBox);
             }
-            elements.Add(WindowMaker.GetButton("Register", new Thickness(550, 370, 50, 10),
+            elements.Add(WindowMaker.GetButton("Register", new Thickness(10, 320, 10, 10),
                 (sender, e) => CheckAndAdd()));
+            Grid.Children.Add(kitGrid);
         }
 
         private void CheckAndAdd()
@@ -75,6 +82,6 @@ namespace AutoMechanic
         }
 
         private Thickness ChangeThickness(Thickness thickness) =>
-            new Thickness(thickness.Left, thickness.Top + 80, thickness.Right, thickness.Bottom - 80);
+            new Thickness(thickness.Left, thickness.Top + 60, thickness.Right, thickness.Bottom - 60);
     }
 }

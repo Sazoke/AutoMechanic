@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Windows.Media;
 
 
 namespace AutoMechanic
@@ -137,15 +138,17 @@ namespace AutoMechanic
 
         private Grid GetGridAdmin()
         {
-            var result = new Grid() { Margin = new Thickness(0) };
-            result.Children.Add(WindowMaker.GetTextBlock("Login :", new Thickness(100, 0, 400, 360)));
-            var login = WindowMaker.GetTextBox(new Thickness(100, 20, 400, 340));
-            result.Children.Add(login);
-            result.Children.Add(WindowMaker.GetTextBlock("Password :", new Thickness(100, 50, 400, 310)));
-            var password = WindowMaker.GetTextBox(new Thickness(100, 70, 400, 290));
-            result.Children.Add(password);
-            result.Children.Add(WindowMaker.GetButton("Register", new Thickness(100, 200, 400, 100),
-                (sender, e) => { AddAdmin(login.Text, password.Text.GetHashCode()); login.Text = "";password.Text = ""; }));
+            var result = WindowMaker.GetGrid("Mechanic.jpg", new Thickness(0));
+            var kitGrid = WindowMaker.GetGrid(new SolidColorBrush(Color.FromArgb(200, 240, 248, 252)), new Thickness(250, 75, 250, 75));
+            kitGrid.Children.Add(WindowMaker.GetTextBlock("Login :", new Thickness(10, 10, 10, 200)));
+            var login = WindowMaker.GetTextBox(new Thickness(10, 40, 10, 170));
+            kitGrid.Children.Add(login);
+            kitGrid.Children.Add(WindowMaker.GetTextBlock("Password :", new Thickness(10, 70, 10, 140)));
+            var password = WindowMaker.GetTextBox(new Thickness(10, 100, 10, 110));
+            kitGrid.Children.Add(password);
+            kitGrid.Children.Add(WindowMaker.GetButton("Register", new Thickness(10, 140, 10, 50),
+                (sender, e) => { AddAdmin(login.Text, password.Text.GetHashCode()); login.Text = ""; password.Text = ""; }));
+            result.Children.Add(kitGrid);
             return result;
         }
 

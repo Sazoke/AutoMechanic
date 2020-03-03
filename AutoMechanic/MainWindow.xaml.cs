@@ -2,34 +2,40 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace AutoMechanic
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            BuildInterface();
+
+            var Grid = WindowMaker.GetGrid("Start.jpg", new Thickness(0));
+            AddChild(Grid);
+
+            var kitGrid = WindowMaker.GetGrid(new SolidColorBrush(Color.FromArgb(200, 240, 248, 252)), new Thickness(250, 75, 250, 75));
+            kitGrid.Background = new SolidColorBrush(Color.FromArgb(200, 240, 248, 252));
+            Grid.Children.Add(kitGrid);
+
+            BuildInterface(kitGrid);
         }
 
-        private void BuildInterface()
+        private void BuildInterface(Grid grid)
         {
-            var elements = Grid.Children;
-            elements.Add(WindowMaker.GetTextBlock("Login :", new Thickness(300, 150, 300, 220)));
-            var loginBox = WindowMaker.GetTextBox(new Thickness(300, 180, 300, 210));
+            var elements = grid.Children;
+            elements.Add(WindowMaker.GetTextBlock("Login :", new Thickness(10,20,10,210)));
+            var loginBox = WindowMaker.GetTextBox(new Thickness(10, 40, 10, 200));
             elements.Add(loginBox);
-            elements.Add(WindowMaker.GetTextBlock("Password :", new Thickness(300, 210, 300, 100)));
-            var passwordBox = WindowMaker.GetTextBox(new Thickness(300, 240, 300, 150));
+            elements.Add(WindowMaker.GetTextBlock("Password :", new Thickness(10, 80, 10, 160)));
+            var passwordBox = new PasswordBox() { Margin = new Thickness(10, 100, 10, 140) };
             elements.Add(passwordBox);
-            elements.Add(WindowMaker.GetButton("Login", new Thickness(300, 290, 300, 80),
-                (sender, e) => CheckAndLogin(loginBox.Text, passwordBox.Text)));
-            elements.Add(WindowMaker.GetButton("Register", new Thickness(300, 350, 300, 20),
+            elements.Add(WindowMaker.GetButton("Login", new Thickness(10, 140, 10, 80),
+                (sender, e) => CheckAndLogin(loginBox.Text, passwordBox.Password)));
+            elements.Add(WindowMaker.GetButton("Register", new Thickness(10, 200, 10, 20),
                 (sender, e) => RegisterGuest()));
         }
 

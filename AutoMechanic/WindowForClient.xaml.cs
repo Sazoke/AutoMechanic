@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace AutoMechanic
@@ -14,6 +16,9 @@ namespace AutoMechanic
             InitializeComponent();
             this.client = client;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            var ground = new ImageBrush();
+            ground.ImageSource = new BitmapImage(new System.Uri(Directory.GetCurrentDirectory() + @"/ClientWindow.jpg"));
+            Background = ground;
             BuildInterface();
         }
 
@@ -26,20 +31,22 @@ namespace AutoMechanic
 
         private void BuildFormOfOrder()
         {
-            var elements = Grid.Children;
-            elements.Clear();
+            Grid.Children.Clear();
+            var kitGrid = WindowMaker.GetGrid(new SolidColorBrush(Color.FromArgb(200, 240, 248, 252)), new Thickness(250, 75, 250, 75));
 
-            elements.Add(WindowMaker.GetTextBlock("Model of machine :", new Thickness(80, 150, 500, 200)));
-            var machineModelBox = WindowMaker.GetTextBox(new Thickness(80, 200, 500, 180));
+            var elements = kitGrid.Children;
+            elements.Add(WindowMaker.GetTextBlock("Model of machine :", new Thickness(10, 45, 10, 135)));
+            var machineModelBox = WindowMaker.GetTextBox(new Thickness(10, 65, 10, 175));
             elements.Add(machineModelBox);
 
-            elements.Add(WindowMaker.GetTextBlock("Number of machine :", new Thickness(320, 150, 200, 200)));
-            var machineNumberBox = WindowMaker.GetTextBox(new Thickness(320, 200, 200, 180));
+            elements.Add(WindowMaker.GetTextBlock("Number of machine :", new Thickness(10, 105, 10, 135)));
+            var machineNumberBox = WindowMaker.GetTextBox(new Thickness(10, 125, 10, 115));
             elements.Add(machineNumberBox);
 
-            var button = new Button() { Margin = new Thickness(600, 150, 50, 150), Content = "Зарегистрировать" };
+            var button = new Button() { Margin = new Thickness(10, 180, 10, 40), Content = "Зарегистрировать" };
             button.Click += (sender, e) => CheckAndAddToDataBase(machineModelBox.Text, machineNumberBox.Text);
             elements.Add(button);
+            Grid.Children.Add(kitGrid);
         }
 
         private void CheckAndAddToDataBase(string model, string number)
