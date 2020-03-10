@@ -11,15 +11,26 @@ namespace AutoMechanic
     public partial class WindowForClient : Window
     {
         private Client client;
+        private static Excel.Workbook workBook;
         public WindowForClient(Client client)
         {
             InitializeComponent();
+            var app = new Excel.Application();
+            var excelProcess = System.Diagnostics.Process.GetProcessesByName("EXCEL").Last();
+            workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\Orders.xlsx");
             this.client = client;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             var ground = new ImageBrush();
             ground.ImageSource = new BitmapImage(new System.Uri(Directory.GetCurrentDirectory() + @"/ClientWindow.jpg"));
             Background = ground;
             BuildInterface();
+            Closing += (sender, e) =>
+            {
+                workBook.Save();
+                workBook.Close();
+                app.Quit();
+                excelProcess.Kill();
+            };
         }
 
         private void BuildInterface()
@@ -68,18 +79,14 @@ namespace AutoMechanic
             }
 
             var newOrder = new Order(client, model, number);
-            AddToDatabase(newOrder, "ConsiderationOrders.xlsx");
+            AddToDatabase(newOrder, workBook.Sheets[1]);
             Grid.Children.Clear();
             BuildInterface();
         }
 
-        public static void AddToDatabase(Order order, string nameOfDocument)
+        public static void AddToDatabase(Order order, Excel.Worksheet workSheet)
         {
-            var app = new Excel.Application();
-            var excelProcess = System.Diagnostics.Process.GetProcessesByName("EXCEL").Last();
-            var workBook = app.Workbooks.Open(Directory.GetCurrentDirectory() + @"\" + nameOfDocument);
             var index = 0;
-            var workSheet = (Excel.Worksheet)workBook.Worksheets[1];
             var cell = workSheet.Cells[++index, 1];
             while (cell.Value2 != null)
                 cell = workSheet.Cells[++index, 1];
@@ -88,10 +95,6 @@ namespace AutoMechanic
             workSheet.Cells[index, 3].Value2 = order.Client.PhoneNumber;
             workSheet.Cells[index, 4].Value2 = order.ModelOfMachine;
             workSheet.Cells[index, 5].Value2 = order.NumberOfMachine;
-            workBook.Save();
-            workBook.Close();
-            app.Quit();
-            excelProcess.Kill();
         }
     }
 }

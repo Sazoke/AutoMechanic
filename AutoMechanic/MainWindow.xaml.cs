@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace AutoMechanic
 {
@@ -13,7 +13,6 @@ namespace AutoMechanic
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
             var Grid = WindowMaker.GetGrid("Start.jpg", new Thickness(0));
             AddChild(Grid);
 
@@ -54,7 +53,8 @@ namespace AutoMechanic
                 dataOfUser = reader.ReadLine();
                 if (dataOfUser is null)
                     break;
-                var datas = dataOfUser.Split(' ');
+                var bytes = dataOfUser.Split(' ').Select(n => byte.Parse(n));
+                var datas = Encoding.ASCII.GetString(bytes.ToArray()).Split(' ');
                 if (datas[0].Equals(login))
                 {
                     if (!int.Parse(datas[1]).Equals(password.GetHashCode()))

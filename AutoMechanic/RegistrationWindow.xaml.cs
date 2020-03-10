@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -48,10 +49,12 @@ namespace AutoMechanic
             for (int i = 0; i < boxes.Count; i++)
             {
                 var name = boxes[i].Text;
-                long x;
-                if (name.Contains(' ') || name == "" || 
+                double x;
+                if (name.Contains(' ') || 
+                    name == "" || 
                     (i == 1 && name.Length < 4) || 
-                    (i == 4 && (name.Length != 11 || !long.TryParse(name,out x))))
+                    (i == 4 && (name.Length != 11 || !double.TryParse(name,out x))) ||
+                    ((i == 0 || i == 2 || i == 3) && double.TryParse(name,out x)))
                 {
                     MessageBox.Show("Wrong " + ContentOfBlocks[i]);
                     return;
@@ -77,8 +80,15 @@ namespace AutoMechanic
                 txt += boxes[i].Text + ' ';
             }
             txt += "client";
-            using(var streamWriter = new StreamWriter(path, true))
-                streamWriter.WriteLine(txt);
+            byte[] bytes = Encoding.ASCII.GetBytes(txt);
+            using (var streamWriter = new StreamWriter(path, true))
+            {
+                for (var i = 0; i < bytes.Length - 1; i++)
+                    streamWriter.Write(bytes[i].ToString() + ' ');
+                streamWriter.Write(bytes.Last());
+                streamWriter.WriteLine();
+            }
+            
         }
 
         private Thickness ChangeThickness(Thickness thickness) =>
